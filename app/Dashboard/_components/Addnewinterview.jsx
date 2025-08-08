@@ -1,5 +1,5 @@
 "use client"
-import { GoogleGenerativeAI } from "@google/generative-ai";
+
 
 import React, { useState } from 'react';
 import {
@@ -14,6 +14,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { chatSession } from "@/utils/GeminiAIModel";
+import { chatSessionPromise } from "@/utils/GeminiAIModel"; // adjust path as needed
+
+import { useUser } from '@clerk/nextjs';
+import moment from 'moment';
+
+
 
 function Addnewinterview() {
     const [openDialog, setOpenDialog] = useState(false);
@@ -21,27 +28,48 @@ function Addnewinterview() {
     const [jobDesc, setJobDesc] = useState('');
     const [jobExperience, setJobExperience] = useState('');
     const [loading, setLoading] = useState(false);
+    const [jsonResponse, setjsonResponse] = useState([]);
     const [promptOutput, setPromptOutput] = useState(null); // Optional
+    const { user } = useUser();
 
-  const onSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    setLoading(true);
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true)
+        console.log(jobPosition, jobDesc, jobExperience);
 
-    const InputPrompt = `Job Position: ${jobPosition}, Job Description: ${jobDesc}, Year of experience: ${jobExperience}. Based on this information, give me ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT} interview questions — ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_EASY} easy, ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_MEDIUM} medium, and ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_HARD} hard — with answers in JSON format. Use "question" and "answer" as keys.`;
+        const InputPrompt = `Job position: ${jobPosition}, Job Description: ${jobDesc}, Years of Experience: ${jobExperience}. Based on this information, please give me 5 interview questions with answers in JSON format. Each JSON object should include "question" and "answer" fields.`;
 
-    const answer = await AIResponse(InputPrompt);
+        try {
+            // Send the message to Gemini chat session
+            const chatSession = await chatSessionPromise;
+            const result = await chatSession.sendMessage(InputPrompt);
+            const response = await result.response;
+            const text = await response.text();
+            const MockjsonResp = text.replace('```json', '').replace('```', '')
+            console.log(JSON.parse(MockjsonResp)); // Will print the JSON string of Q&A
+            setjsonResponse(MockjsonResp)
+            if (MockjsonResp) {
+                const resp = await connectionTodb.insert(mockInterviewSchema)
+                    .value({
+                        jsonMockresp: MockjsonResp,
+                        jobPosition: jobPosition,
+                        jobDesc: jobDesc,
+                        jobExperience: jobExperience,
+                        createdBy: user?.primaryEmailAddress?.emailAddress,
+                        createdAt: moment().format(DD - MM - YYYY)
+                    })
 
-    // Clean ```json or ``` from Gemini response
-    const exactAnswer = answer.replace(/```json\s*|```/g, "").trim();
-    console.log(exactAnswer);
+                console.log(resp)
+            }
+            else {
+                console.log("ERROR")
+            }
+            setLoading(false)
+        } catch (error) {
+            console.error("Error in AI generation:", error);
+        }
+    };
 
-    setLoading(false);
-  } catch (err) {
-    console.error("Error generating AI response:", err);
-    setLoading(false);
-  }
-};
 
     return (
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -97,9 +125,9 @@ function Addnewinterview() {
                                 {loading ? (
                                     <>
                                         <Loader2 className="animate-spin mr-2" />
-                                        Generating...
+                                        Generating que's from AI...
                                     </>
-                                ) : "Generate Interview"}
+                                ) : "Generate"}
                             </Button>
                         </div>
                     </div>
