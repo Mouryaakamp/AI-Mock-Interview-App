@@ -71,7 +71,7 @@ function Addnewinterview() {
                     if (data.success) {
                         setInterviewData(data);
                         console.log("API Response:", data.data._id); // store the response from backend
-                    router.push(`/dashboard/interview/${data.data._id}`)
+                    router.push(`/dashboard/interviews/${data.data._id}`)
                     } else {
                         console.error("Error creating interview:", data.error);
                     }

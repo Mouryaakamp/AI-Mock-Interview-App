@@ -7,21 +7,36 @@ import { Lightbulb, WebcamIcon } from "lucide-react";
 import Link from "next/link";
 
 function Interview() {
-  const { interviewID } = useParams(); // comes from /dashboard/interview/[interviewID]
+  const [interviewID, setInterviewID] = useState(null);
   const [interviewdata, setinterviewdata] = useState(null);
   const [webcamenable, setwebcamenable] = useState(false);
 
-  useEffect(() => {
-    if (interviewID) {
-      fetch(`/api/interview/${interviewID}`) // ✅ match [id] API route
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Fetched data:", data);
+   useEffect(() => {
+  // Get the ID from the URL path
+  const path = window.location.pathname;
+  const id = path.split("/").pop();
+  setInterviewID(id);
+
+  if (id) {
+    // Fetch data from your API route
+    fetch(`/api/interview/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch interview data");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
           setinterviewdata(data.data);
-        })
-        .catch(console.error);
-    }
-  }, [interviewID]);
+        } else {
+          console.error("API error:", data.error);
+        }
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+      });
+  }
+}, []);
+
 
   return (
     <div className="my-6">
@@ -73,10 +88,10 @@ function Interview() {
             <h2 className="mt-3">{process.env.NEXT_PUBLIC_INFO}</h2>
           </div>
         </div>
-
-        <Link href={`/dashboard/interview/${interviewdata?._id}/start`}>
+        <Link href={`/dashboard/interviews/${interviewID}/start`}>
           <Button>Start Interview</Button>
         </Link>
+
       </div>
     </div>
   );
