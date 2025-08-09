@@ -15,10 +15,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { chatSession } from "@/utils/GeminiAIModel";
-import { chatSessionPromise } from "@/utils/GeminiAIModel"; // adjust path as needed
+import { chatSessionPromise } from "@/utils/GeminiAIModel";
 
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -29,7 +30,9 @@ function Addnewinterview() {
     const [jobExperience, setJobExperience] = useState('');
     const [loading, setLoading] = useState(false);
     const [jsonResponse, setjsonResponse] = useState([]);
-    const [promptOutput, setPromptOutput] = useState(null); // Optional
+    const [promptOutput, setPromptOutput] = useState(null);
+    const [InterviewData, setInterviewData] = useState("") // Optional
+    const router = useRouter();
     const { user } = useUser();
 
     const onSubmit = async (e) => {
@@ -49,21 +52,32 @@ function Addnewinterview() {
             console.log(JSON.parse(MockjsonResp)); // Will print the JSON string of Q&A
             setjsonResponse(MockjsonResp)
             if (MockjsonResp) {
-                const resp = await connectionTodb.insert(mockInterviewSchema)
-                    .value({
-                        jsonMockresp: MockjsonResp,
-                        jobPosition: jobPosition,
-                        jobDesc: jobDesc,
-                        jobExperience: jobExperience,
-                        createdBy: user?.primaryEmailAddress?.emailAddress,
-                        createdAt: moment().format(DD - MM - YYYY)
-                    })
+                try {
+                    const resp = await fetch("/api/interview", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            jsonMockresp: MockjsonResp, // lowercase "r"
+                            jobPosition,
+                            jobDesc,
+                            jobExperience,
+                            createdBy: user?.primaryEmailAddress?.emailAddress || "",
+                            createdAt: moment().format("DD-MM-YYYY"),
+                        }),
+                    });
 
-                console.log(resp)
+                    const data = await resp.json();
+
+                    if (data.success) {
+                        setInterviewData(data); // store the response from backend
+                    } else {
+                        console.error("Error creating interview:", data.error);
+                    }
+                } catch (err) {
+                    console.error("Fetch error:", err);
+                }
             }
-            else {
-                console.log("ERROR")
-            }
+
             setLoading(false)
         } catch (error) {
             console.error("Error in AI generation:", error);
