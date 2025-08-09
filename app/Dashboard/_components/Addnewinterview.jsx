@@ -69,7 +69,9 @@ function Addnewinterview() {
                     const data = await resp.json();
 
                     if (data.success) {
-                        setInterviewData(data); // store the response from backend
+                        setInterviewData(data);
+                        console.log("API Response:", data.data._id); // store the response from backend
+                    router.push(`/dashboard/interview/${data.data._id}`)
                     } else {
                         console.error("Error creating interview:", data.error);
                     }
