@@ -6,14 +6,25 @@ const mockInterviewSchema = new mongoose.Schema({
   jobDesc: { type: String, required: true },
   jobExperience: { type: String, required: true },
   createdBy: { type: String, required: true },
-  createdAt: { type: String, default: () => new Date().toISOString() }, // Optional if not passed
+  createdAt: { type: String, default: () => new Date().toISOString() },
   mockId: { type: String, required: true }
-}, {
-  timestamps: true // Automatically adds createdAt and updatedAt fields
+}, { timestamps: true });
+
+export const MockInterview =
+  (mongoose.models && mongoose.models.MockInterview) ||
+  mongoose.model("MockInterview", mockInterviewSchema);
+
+const userAnswerSchema = new mongoose.Schema({
+  mockId: { type: String, required: true },
+  question: { type: String, required: true },
+  correctAns: String,
+  userAns: String,
+  feedback: String,
+  rating: String,
+  userEmail: String,
+  createdAt: { type: String, default: () => new Date().toISOString() }
 });
 
-// MongoDB uses _id instead of id by default
-const MockInterview = mongoose.models.MockInterview || mongoose.model("MockInterview", mockInterviewSchema);
-
-export default MockInterview;
-
+export const UserAnswer =
+  (mongoose.models && mongoose.models.UserAnswer) ||
+  mongoose.model("UserAnswer", userAnswerSchema);

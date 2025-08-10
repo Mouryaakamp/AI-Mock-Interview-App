@@ -20,6 +20,8 @@ import { chatSessionPromise } from "@/utils/GeminiAIModel";
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
+import { UserAnswer } from '@/utils/schema';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -57,12 +59,13 @@ function Addnewinterview() {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            jsonMockresp: MockjsonResp, // lowercase "r"
+                            jsonMockResp: MockjsonResp, // lowercase "r"
                             jobPosition,
                             jobDesc,
                             jobExperience,
-                            createdBy: user?.primaryEmailAddress?.emailAddress || "",
+                            createdBy: user?.primaryEmailAddress?.emailAddress || "example@gmail.com",
                             createdAt: moment().format("DD-MM-YYYY"),
+                             mockId: uuidv4()
                         }),
                     });
 

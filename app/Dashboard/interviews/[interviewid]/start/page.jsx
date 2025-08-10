@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import Questionssection from "./_components/Questionssection";
 import RecordAnssection from "./_components/RecordAnssection";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 function StartInterview() {
   const [interviewID, setInterviewID] = useState(null);
@@ -11,6 +14,8 @@ function StartInterview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 const[activequestionindex,setactivequestionindex]=useState(0)
+const params = useParams();
+  const interviewId = params.interviewid;
 
 
 
@@ -34,7 +39,7 @@ const[activequestionindex,setactivequestionindex]=useState(0)
     if (data.success) {
       setInterviewData(data.data);
       try {
-        const parsedQuestions = JSON.parse(data.data.jsonMockresp); // small 'r'
+        const parsedQuestions = JSON.parse(data.data.jsonMockResp); // small 'r'
         setMockinterviewQuestions(parsedQuestions);
       } catch (err) {
         console.error("JSON parse error:", err);
@@ -62,7 +67,19 @@ const[activequestionindex,setactivequestionindex]=useState(0)
 <Questionssection Mockinterviewquestions={Mockinterviewquestions}
 activequestionindex={activequestionindex}/>
 {/* video/audio record */}
-<RecordAnssection/>
+<RecordAnssection Mockinterviewquestions={Mockinterviewquestions}
+activequestionindex={activequestionindex} interviewData={interviewData}/>
+      </div>
+      <div className="flex justify-end gap-6">
+        {activequestionindex>0&&<Button onClick={()=>setactivequestionindex(activequestionindex-1)}>Previous Question</Button>}
+
+        {activequestionindex!=Mockinterviewquestions?.length-1&&<Button onClick={()=>setactivequestionindex(activequestionindex+1)}>Next Question</Button>}
+
+        
+        {activequestionindex == Mockinterviewquestions?.length - 1 && 
+        <Link href={`/dashboard/interviews/${interviewId}/feedback`}>
+          <Button>End Interview</Button>
+        </Link>}
       </div>
     </div>
   );
