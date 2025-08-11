@@ -17,9 +17,9 @@ router.push(`/dashboard/interviews/${interview._id}/feedback`);}
             <h2 className='text-xs text-gray-400'>Created at:{interview?.createdAt}</h2>
         
         <div className='flex justify-between mt-2 gap-5'>
-            <Button size="sm" variant="outline" className="w-40"
+            <Button size="sm" variant="outline"
             onClick={onFeedback}>Feedback</Button>
-            <Button size="sm" className="w-40"
+            <Button size="sm" 
             onClick={onStart}>Start</Button>
         </div>
         </div>
