@@ -9,9 +9,9 @@ function Header() {
   };
 
   return (
-    <div className='flex p-4 md:p-6 items-center justify-between bg-white border-b-2 border-gray-200 shadow-sm sticky top-0 z-50'>
+    <div className='flex p-3 md:p-2 items-center justify-between bg-white border-b-2 border-gray-200 shadow-sm sticky top-0 z-50'>
       <Link to="/dashboard" className='flex items-center gap-2'>
-        <img src="/logo.svg" width={120} height={50} alt='logo' className='object-contain' />
+        <img src="/logo.svg" width={100} height={20} alt='logo' className='object-contain' />
       </Link>
       <ul className='hidden md:flex gap-8 items-center'>
         <li>

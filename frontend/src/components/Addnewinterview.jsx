@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
@@ -126,14 +127,14 @@ function Addnewinterview() {
         >
           <div className="flex flex-col items-center justify-center space-y-3">
             <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="text-3xl font-bold text-white">+</span>
+              <span className="text-3xl font-bold text-white"> <PlusIcon/> </span>
             </div>
             <h2 className="text-lg font-semibold text-gray-700 group-hover:text-gray-900">Add New Interview</h2>
-            <p className="text-sm text-gray-500 text-center">Create a new mock interview session</p>
+            <p className=" text-sm text-gray-500 text-center">Create a new mock interview session</p>
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl bg-slate-200">
         <DialogHeader>
           <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Create New Interview
