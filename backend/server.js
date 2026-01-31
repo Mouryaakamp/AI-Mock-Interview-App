@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cookieParser())
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://ai-mock-interview-app-zcm3.onrender.com",
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
