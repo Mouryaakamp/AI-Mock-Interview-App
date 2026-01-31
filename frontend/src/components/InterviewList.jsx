@@ -1,42 +1,50 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InterviewItemCard from './InterviewItemCard';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { AuthContext } from "../context/Usecontext";
+import { API } from "../utils/Api";
+import { Button } from "@/components/ui/button";
 
 export default function InterviewList() {
+  const { accessToken } = useContext(AuthContext);
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(false);
-  const fetchedRef = useRef(false);
+  const [unauthorized, setUnauthorized] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getUserEmail = () => {
-      return localStorage.getItem('userEmail') || "example@gmail.com";
-    };
+    const token = accessToken || localStorage.getItem("token");
+    if (!token) return;
 
-    if (fetchedRef.current) return;
-    fetchedRef.current = true;
-
+    setUnauthorized(false);
     const fetchInterviews = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_URL}/api/interviews`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ createdBy: getUserEmail() }),
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+          setUnauthorized(true);
+          return;
+        }
+
+        const res = await API({
+          url: "/interviews",
+          method: "GET",
         });
-        if (!res.ok) throw new Error('Failed to fetch interviews');
-        const data = await res.json();
-        console.log('Fetched interviews:', data);
-        setInterviews(data);
-      } catch (error) {
-        console.error(error);
+
+        setInterviews(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error("Interviews fetch error:", err);
+        if (err.response?.status === 401) {
+          setUnauthorized(true);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchInterviews();
-  }, []);
+  }, [accessToken]);
+
 
   if (loading) {
     return (
@@ -48,7 +56,22 @@ export default function InterviewList() {
       </div>
     );
   }
-  
+
+  if (unauthorized) {
+    return (
+      <div className="text-center py-12 bg-amber-50 border-2 border-amber-200 rounded-lg">
+        <p className="text-amber-800 font-medium mb-2">Session expired or invalid</p>
+        <p className="text-amber-700 text-sm mb-4">Please log in again to view your interviews.</p>
+        <Button
+          onClick={() => navigate("/login")}
+          className="bg-amber-600 hover:bg-amber-700 text-white"
+        >
+          Go to Login
+        </Button>
+      </div>
+    );
+  }
+
   if (interviews.length === 0) {
     return (
       <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
@@ -68,7 +91,8 @@ export default function InterviewList() {
         {interviews && interviews.map((interview, index) => (
           <InterviewItemCard
             interview={interview}
-            key={interview._id || index}
+            key={interview._id}
+
           />
         ))}
       </div>

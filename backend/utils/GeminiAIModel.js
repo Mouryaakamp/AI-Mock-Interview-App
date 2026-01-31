@@ -7,7 +7,7 @@ if (!apiKey) {
 const GEMINI_URL =
   "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";
 
-export async function AIResponse(prompt) {
+async function AIResponse(prompt) {
   const res = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -28,3 +28,5 @@ export async function AIResponse(prompt) {
   const data = await res.json();
   return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
+
+module.exports = AIResponse;

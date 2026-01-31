@@ -1,5 +1,5 @@
-import express from "express";
-import { AIResponse } from "../utils/GeminiAIModel.js";
+const express=require('express');
+const AIResponse =require("../utils/GeminiAIModel")
 
 const router = express.Router();
 
@@ -43,12 +43,12 @@ Return ONLY valid JSON array like this:
     const match = cleaned.match(/\[[\s\S]*\]/);
     if (match) cleaned = match[0];
 
-    return res.json({ success: true, data: cleaned });
+    return res.status(200).json({ success: true, data: cleaned });
   } catch (error) {
     console.error("Generate error:", error);
     return res.status(500).json({
       success: false,
-      error: "Failed to generate interview questions",
+      error: error.message || "Failed to generate interview questions",
     });
   }
 });
@@ -101,14 +101,14 @@ Return ONLY valid JSON:
       };
     }
 
-    return res.json({ success: true, data: feedback });
+    return res.status(200).json({ success: true, data: feedback });
   } catch (error) {
     console.error("Feedback error:", error);
     return res.status(500).json({
       success: false,
-      error: "Failed to generate feedback",
+      error: error.message || "Failed to generate feedback",
     });
   }
 });
 
-export default router;
+module.exports=router

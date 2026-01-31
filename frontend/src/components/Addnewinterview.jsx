@@ -16,8 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'sonner';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API } from "@/utils/Api";
 
 function Addnewinterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -27,7 +26,6 @@ function Addnewinterview() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Get user email from localStorage or use default
   const getUserEmail = () => {
     return localStorage.getItem('userEmail') || "example@gmail.com";
   };
@@ -37,60 +35,34 @@ function Addnewinterview() {
     setLoading(true);
 
     try {
-      // Generate questions using Gemini API
-      const geminiResponse = await fetch(`${API_URL}/api/gemini/generate`, {
+      const geminiRes = await API({
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jobPosition,
-          jobDesc,
-          jobExperience,
-        }),
+        url: '/gemini/generate',
+        data: { jobPosition, jobDesc, jobExperience },
       });
 
-      // Get error message from response if available
-      if (!geminiResponse.ok) {
-        let errorMessage = 'Failed to generate questions';
-        try {
-          const errorData = await geminiResponse.json();
-          errorMessage = errorData.error || errorData.message || errorMessage;
-        } catch (parseError) {
-          // If response is not JSON, use status text
-          errorMessage = `${geminiResponse.status}: ${geminiResponse.statusText || 'Server error'}`;
-        }
-        throw new Error(errorMessage);
-      }
-
-      const geminiData = await geminiResponse.json();
-      
+      const geminiData = geminiRes.data;
       if (!geminiData.success) {
         throw new Error(geminiData.error || 'Failed to generate questions');
       }
-      
-      const MockjsonResp = geminiData.data;
 
+      const MockjsonResp = geminiData.data;
       if (MockjsonResp) {
-        // Save interview to database
-        const resp = await fetch(`${API_URL}/api/interview`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+        const createRes = await API({
+          method: 'POST',
+          url: '/interview',
+          data: {
             jsonMockResp: MockjsonResp,
             jobPosition,
             jobDesc,
             jobExperience,
             createdBy: getUserEmail(),
             createdAt: moment().format("DD-MM-YYYY"),
-            mockId: uuidv4()
-          }),
+            mockId: uuidv4(),
+          },
         });
 
-        if (!resp.ok) {
-          throw new Error('Failed to save interview');
-        }
-
-        const data = await resp.json();
-
+        const data = createRes.data;
         if (data.success) {
           toast.success("Interview created successfully!");
           setOpenDialog(false);
@@ -103,11 +75,8 @@ function Addnewinterview() {
       }
     } catch (error) {
       console.error("Error in AI generation:", error);
-      // Show the actual error message from the server
-      const errorMessage = error.message || "An error occurred. Please check your connection and try again.";
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || "An error occurred. Please check your connection and try again.";
       toast.error(errorMessage);
-      
-      // If it's an API key error, show additional help
       if (errorMessage.includes("API key") || errorMessage.includes("GEMINI_API_KEY")) {
         toast.error("Please configure your Gemini API key in the backend .env file", {
           duration: 5000,

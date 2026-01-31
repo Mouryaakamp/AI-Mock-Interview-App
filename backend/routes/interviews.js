@@ -1,27 +1,23 @@
-import express from 'express';
-import connectionTodb from '../utils/db.js';
-import { MockInterview } from '../utils/schema.js';
+const express=require('express');
+const { MockInterview } = require('../utils/schema.js');
 
 const router = express.Router();
 
-// POST - Get all interviews by user
-router.post('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    await connectionTodb();
+    const email = req.user.email;
 
-    const { createdBy } = req.body;
+    const interviews = await MockInterview
+      .find({ createdBy: email })
+      .sort({ _id: -1 })
+      .lean();
 
-    const emailToUse = createdBy || "example@gmail.com";
-
-    const interviews = await MockInterview.find({ createdBy: emailToUse }).sort({ _id: -1 });
-
-    console.log('Interviews found:', interviews.length);
-
-    return res.json(interviews);
+    return res.status(200).json(interviews);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Failed to fetch interviews" });
+    console.error("Interviews list error:", err);
+    return res.status(500).json({ success: false, error: "Failed to fetch interviews" });
   }
 });
 
-export default router;
+
+module.exports=router

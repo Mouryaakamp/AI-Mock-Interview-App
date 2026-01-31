@@ -3,8 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Questionssection from "../components/Questionssection";
 import RecordAnssection from "../components/RecordAnssection";
 import { Button } from "@/components/ui/button";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API } from "@/utils/Api";
 
 function StartInterview() {
   const { interviewid } = useParams();
@@ -16,12 +15,9 @@ function StartInterview() {
 
   useEffect(() => {
     if (interviewid) {
-      fetch(`${API_URL}/api/interview/${interviewid}`)
+      API({ method: 'GET', url: `/interview/${interviewid}` })
         .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch interview data");
-          return res.json();
-        })
-        .then((data) => {
+          const data = res.data;
           if (data.success) {
             setInterviewData(data.data);
             try {
@@ -35,7 +31,7 @@ function StartInterview() {
             setError(data.error);
           }
         })
-        .catch((err) => setError(err.message))
+        .catch((err) => setError(err.response?.data?.error || err.message))
         .finally(() => setLoading(false));
     } else {
       setError("Interview ID not found in URL");

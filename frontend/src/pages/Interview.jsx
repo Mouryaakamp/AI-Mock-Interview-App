@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Webcam from "react-webcam";
 import { Lightbulb, WebcamIcon } from "lucide-react";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API } from "@/utils/Api";
 
 function Interview() {
   const { interviewid } = useParams();
@@ -17,12 +16,9 @@ function Interview() {
     if (interviewid) {
       setLoading(true);
       setError(null);
-      fetch(`${API_URL}/api/interview/${interviewid}`)
+      API({ method: 'GET', url: `/interview/${interviewid}` })
         .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch interview data");
-          return res.json();
-        })
-        .then((data) => {
+          const data = res.data;
           if (data.success) {
             setinterviewdata(data.data);
           } else {
@@ -31,7 +27,7 @@ function Interview() {
         })
         .catch((err) => {
           console.error("Fetch error:", err);
-          setError(err.message || "Failed to load interview");
+          setError(err.response?.data?.error || err.message || "Failed to load interview");
         })
         .finally(() => {
           setLoading(false);

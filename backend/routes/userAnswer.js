@@ -1,20 +1,28 @@
-import express from 'express';
-import connectionTodb from '../utils/db.js';
-import { UserAnswer } from '../utils/schema.js';
+const express = require('express');
+const { UserAnswer } = require("../utils/schema");
 
 const router = express.Router();
 
 // POST - Save user answer
 router.post('/', async (req, res) => {
   try {
-    await connectionTodb();
     const data = req.body;
+    const { mockId, question } = data;
+
+    if (!mockId || !question) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing required fields: mockId, question",
+      });
+    }
+
     const newAnswer = await UserAnswer.create(data);
-    return res.json(newAnswer);
+    return res.status(201).json(newAnswer);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: error.message });
+    console.error("UserAnswer save error:", error);
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
 
-export default router;
+
+module.exports=router

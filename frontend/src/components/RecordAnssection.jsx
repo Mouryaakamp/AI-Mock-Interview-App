@@ -5,8 +5,7 @@ import useSpeechToText from 'react-hook-speech-to-text';
 import { Mic, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import moment from 'moment';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API } from '@/utils/Api';
 
 function RecordAnssection({ Mockinterviewquestions, activequestionindex, interviewData, interviewid }) {
   const mockId = interviewid;
@@ -60,35 +59,25 @@ function RecordAnssection({ Mockinterviewquestions, activequestionindex, intervi
     const userEmail = getUserEmail();
 
     try {
-      // Get feedback from Gemini
-      const feedbackResponse = await fetch(`${API_URL}/api/gemini/feedback`, {
+      const feedbackRes = await API({
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question,
-          userAns,
-        }),
+        url: '/gemini/feedback',
+        data: { question, userAns },
       });
 
-      if (!feedbackResponse.ok) {
-        throw new Error('Failed to get feedback');
-      }
-
-      const feedbackData = await feedbackResponse.json();
-      
+      const feedbackData = feedbackRes.data;
       if (!feedbackData.success) {
         throw new Error(feedbackData.error || 'Failed to get feedback');
       }
 
       const jsonFeedbackResp = feedbackData.data;
-
       const feedback = jsonFeedbackResp?.feedback || "";
       const rating = jsonFeedbackResp?.rating?.toString() || "";
 
-      const resp = await fetch(`${API_URL}/api/userAnswer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await API({
+        method: 'POST',
+        url: '/userAnswer',
+        data: {
           mockId,
           question,
           correctAns,
@@ -97,16 +86,12 @@ function RecordAnssection({ Mockinterviewquestions, activequestionindex, intervi
           rating,
           userEmail,
           createdAt: moment().format("DD-MM-YYYY"),
-        }),
+        },
       });
 
-      if (resp.ok) {
-        toast.success("Answer recorded successfully!");
-        setuseranswer('');
-        setResults([]);
-      } else {
-        throw new Error('Failed to save answer');
-      }
+      toast.success("Answer recorded successfully!");
+      setuseranswer('');
+      setResults([]);
     } catch (error) {
       console.error("Error updating answer:", error);
       toast.error(error.message || "Failed to record answer");
@@ -150,14 +135,14 @@ function RecordAnssection({ Mockinterviewquestions, activequestionindex, intervi
           }}
         />
       </div>
-      
+
       <div className='w-full space-y-4'>
         {error && (
           <div className='p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm'>
             {error}
           </div>
         )}
-        
+
         {useranswer && (
           <div className='p-4 bg-blue-50 border border-blue-200 rounded-lg'>
             <p className='text-sm font-medium text-blue-900 mb-2'>Your Answer:</p>
@@ -168,11 +153,10 @@ function RecordAnssection({ Mockinterviewquestions, activequestionindex, intervi
         <Button
           disabled={loading}
           variant={isRecording ? "destructive" : "default"}
-          className={`w-full h-12 text-base font-medium ${
-            isRecording 
-              ? 'bg-red-600 hover:bg-red-700 animate-pulse' 
+          className={`w-full h-12 text-base font-medium ${isRecording
+              ? 'bg-red-600 hover:bg-red-700 animate-pulse'
               : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
-          }`}
+            }`}
           onClick={StartStopRecording}
         >
           {loading ? (

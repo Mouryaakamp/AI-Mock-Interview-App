@@ -7,8 +7,7 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronDownIcon } from "lucide-react";
 import { Button } from '@/components/ui/button';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API } from '@/utils/Api';
 
 export default function FeedbackPage() {
   const { interviewid } = useParams();
@@ -21,28 +20,24 @@ export default function FeedbackPage() {
     if (!interviewid) return;
 
     setLoading(true);
-    fetch(`${API_URL}/api/feedback/${interviewid}`)
+    API({ method: 'GET', url: `/feedback/${interviewid}` })
       .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch feedback');
-        return res.json();
-      })
-      .then(data => {
-        setfeedbackList(data);
-        
-        // Calculate overall rating
+        const data = res.data;
+        setfeedbackList(data ?? []);
+
         if (data && data.length > 0) {
           const ratings = data
             .map(item => parseFloat(item.rating))
             .filter(rating => !isNaN(rating));
-          
+
           if (ratings.length > 0) {
             const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
-            setOverallRating(Math.round(average * 10) / 10); // Round to 1 decimal place
+            setOverallRating(Math.round(average * 10) / 10);
           }
         }
       })
-      .catch(error => {
-        console.error('Error fetching feedback:', error);
+      .catch(err => {
+        console.error('Error fetching feedback:', err);
       })
       .finally(() => {
         setLoading(false);
@@ -72,15 +67,15 @@ export default function FeedbackPage() {
           </div>
           <div className='flex-1'>
             <div className='h-3 bg-white/20 rounded-full overflow-hidden'>
-              <div 
+              <div
                 className='h-full bg-white rounded-full transition-all duration-500'
                 style={{ width: `${(overallRating / 5) * 100}%` }}
               ></div>
             </div>
             <p className='text-sm text-green-100 mt-2'>
-              {overallRating >= 4 ? 'Excellent performance!' : 
-               overallRating >= 3 ? 'Good job! Keep practicing.' : 
-               'Keep working on your answers. You can improve!'}
+              {overallRating >= 4 ? 'Excellent performance!' :
+                overallRating >= 3 ? 'Good job! Keep practicing.' :
+                  'Keep working on your answers. You can improve!'}
             </p>
           </div>
         </div>
@@ -93,7 +88,7 @@ export default function FeedbackPage() {
         <p className='text-sm text-gray-600 mb-6'>
           Review each question, your answers, and feedback for improvement
         </p>
-        
+
         <div className='space-y-4'>
           {feedbackList && feedbackList.length > 0 ? (
             feedbackList.map((item, index) => (
@@ -115,25 +110,25 @@ export default function FeedbackPage() {
                       <span className="font-semibold text-blue-900">Rating:</span>
                       <span className="text-blue-700 font-bold text-lg">{item.rating}/5</span>
                       <div className='flex-1 h-2 bg-blue-200 rounded-full ml-2'>
-                        <div 
+                        <div
                           className='h-full bg-blue-600 rounded-full'
                           style={{ width: `${(parseFloat(item.rating) / 5) * 100}%` }}
                         ></div>
                       </div>
                     </div>
-                    
+
                     <div className="p-3 border-2 border-red-200 rounded-lg bg-red-50">
                       <h4 className="font-semibold text-red-900 mb-1">Your Answer:</h4>
                       <p className="text-sm text-red-800">{item.userAns || 'No answer provided'}</p>
                     </div>
-                    
+
                     {item.correctAns && (
                       <div className="p-3 border-2 border-green-200 rounded-lg bg-green-50">
                         <h4 className="font-semibold text-green-900 mb-1">Expected Answer:</h4>
                         <p className="text-sm text-green-800">{item.correctAns}</p>
                       </div>
                     )}
-                    
+
                     <div className="p-3 border-2 border-blue-200 rounded-lg bg-blue-50">
                       <h4 className="font-semibold text-blue-900 mb-1">Feedback:</h4>
                       <p className="text-sm text-blue-800">{item.feedback || 'No feedback available'}</p>
@@ -151,7 +146,7 @@ export default function FeedbackPage() {
       </div>
 
       <div className='flex justify-center pt-6'>
-        <Button 
+        <Button
           onClick={() => navigate('/dashboard')}
           className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 min-w-[200px] h-12'
         >
