@@ -85,9 +85,9 @@ function StartInterview() {
       <div className="flex justify-between items-center gap-4 pt-6 border-t">
         <div>
           {activequestionindex > 0 && (
-            <Button 
+            <Button type="button"
               variant="outline"
-              onClick={() => setactivequestionindex(activequestionindex - 1)}
+              onClick={(e) => { e.preventDefault(); setactivequestionindex(activequestionindex - 1); }}
               className="min-w-[140px]"
             >
               ← Previous
@@ -97,8 +97,8 @@ function StartInterview() {
 
         <div className="flex gap-4">
           {activequestionindex !== Mockinterviewquestions?.length - 1 && (
-            <Button 
-              onClick={() => setactivequestionindex(activequestionindex + 1)}
+            <Button type="button"
+              onClick={(e) => { e.preventDefault(); setactivequestionindex(activequestionindex + 1); }}
               className="min-w-[140px] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             >
               Next →
@@ -107,7 +107,7 @@ function StartInterview() {
 
           {activequestionindex === Mockinterviewquestions?.length - 1 && (
             <Link to={`/dashboard/interviews/${interviewid}/feedback`}>
-              <Button className="min-w-[140px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+              <Button type="button" className="min-w-[140px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
                 End Interview
               </Button>
             </Link>

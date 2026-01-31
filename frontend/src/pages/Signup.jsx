@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { AuthContext } from "@/context/Usecontext";
-import { api } from "@/utils/Api";
+import { API } from "@/utils/Api";
 
 export default function Signup() {
     const { setAccessToken } = useContext(AuthContext);
@@ -18,7 +18,11 @@ export default function Signup() {
                 return;
             }
 
-            const res = await api.post("/auth/signup", signindata);
+            const res = await API({
+                method: "POST",
+                url: "/auth/signup",
+                data: signindata,
+            });
             const accessToken = res.data?.accessToken;
 
             if (!accessToken) {
@@ -96,7 +100,7 @@ export default function Signup() {
                     />
                 </div>
 
-                <Button className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={handleSignup}>
+                <Button type="button" className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={(e) => { e.preventDefault(); handleSignup(); }}>
                     Sign In
                 </Button>
 
@@ -106,10 +110,10 @@ export default function Signup() {
                     <div className="flex-1 h-px bg-gray-300"></div>
                 </div>
 
-                <Button
+                <Button type="button"
                     variant="outline"
                     className="w-full h-11 flex items-center justify-center gap-2 border-2 hover:bg-gray-50"
-                    onClick={loginWithGoogle}
+                    onClick={(e) => { e.preventDefault(); loginWithGoogle(); }}
                 >
                     <img
                         src="/google-icon.svg"
@@ -120,10 +124,10 @@ export default function Signup() {
                     Continue with Google
                 </Button>
 
-                <Button
+                <Button type="button"
                     variant="outline"
                     className="w-full h-11 flex items-center justify-center gap-2 border-2 hover:bg-gray-50"
-                    onClick={loginWithFacebook}
+                    onClick={(e) => { e.preventDefault(); loginWithFacebook(); }}
                 >
                     <img
                         src="/facebook-icon.svg"

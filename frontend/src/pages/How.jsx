@@ -89,7 +89,7 @@ export default function How() {
           Create your first mock interview and start practicing today. It only takes a few minutes to set up!
         </p>
         <a href="/dashboard">
-          <button className='px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-md'>
+          <button type="button" className='px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-md'>
             Go to Dashboard
           </button>
         </a>

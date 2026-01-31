@@ -85,7 +85,7 @@ function Header() {
         <div className="hidden md:block text-sm text-gray-600">
           {getUserEmail().split('@')[0]}
         </div>
-        <div onClick={() => { setOpen(!open) }} className="cursor-pointer   w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white font-semibold shadow-md">
+        <div onClick={(e) => { e.preventDefault(); setOpen(!open); }} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } }} className="cursor-pointer   w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white font-semibold shadow-md">
           {getUserEmail().charAt(0).toUpperCase()}
         </div>
       </div>

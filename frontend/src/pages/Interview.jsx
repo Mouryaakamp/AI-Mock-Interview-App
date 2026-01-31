@@ -91,10 +91,10 @@ function Interview() {
                   Enable your webcam to record your interview session
                 </p>
               </div>
-              <Button
+              <Button type="button"
                 variant="outline"
                 className="w-full h-12 text-base"
-                onClick={() => setwebcamenable(true)}
+                onClick={(e) => { e.preventDefault(); setwebcamenable(true); }}
               >
                 Enable Webcam and Microphone
               </Button>

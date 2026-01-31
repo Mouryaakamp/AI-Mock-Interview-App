@@ -163,13 +163,11 @@ const navigate = useNavigate();
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             
-            <button onClick={()=>navigate("/register")} className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-semibold text-lg overflow-hidden hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 min-w-[200px] text-white">
-    
+            <button type="button" onClick={(e) => { e.preventDefault(); navigate("/register"); }} className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl font-semibold text-lg overflow-hidden hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 min-w-[200px] text-white">
               <span className="relative z-10">Sign Up</span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
-            
-            <button onClick={()=>navigate("/login")} className="group relative px-8 py-4 bg-white border-2 border-gray-300 rounded-xl font-semibold text-lg hover:border-blue-500 hover:bg-gray-50 transition-all duration-300 hover:scale-105 min-w-[200px] text-gray-900">
+            <button type="button" onClick={(e) => { e.preventDefault(); navigate("/login"); }} className="group relative px-8 py-4 bg-white border-2 border-gray-300 rounded-xl font-semibold text-lg hover:border-blue-500 hover:bg-gray-50 transition-all duration-300 hover:scale-105 min-w-[200px] text-gray-900">
               <span className="relative z-10">Log In</span>
             </button>
           </div>

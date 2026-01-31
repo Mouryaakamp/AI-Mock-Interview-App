@@ -108,7 +108,8 @@ function RecordAnssection({ Mockinterviewquestions, activequestionindex, intervi
     }
   }, [isRecording, useranswer, UpdateUserAnswer]);
 
-  const StartStopRecording = async () => {
+  const StartStopRecording = (e) => {
+    if (e) e.preventDefault();
     if (isRecording) {
       stopSpeechToText();
       hasSavedRef.current = false; // Reset when starting new recording
@@ -150,7 +151,7 @@ function RecordAnssection({ Mockinterviewquestions, activequestionindex, intervi
           </div>
         )}
 
-        <Button
+        <Button type="button"
           disabled={loading}
           variant={isRecording ? "destructive" : "default"}
           className={`w-full h-12 text-base font-medium ${isRecording

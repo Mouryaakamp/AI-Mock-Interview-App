@@ -5,11 +5,13 @@ import React from 'react';
 function InterviewItemCard({ interview }) {
   const navigate = useNavigate();
 
-  const onStart = () => {
+  const onStart = (e) => {
+    if (e) e.preventDefault();
     navigate('/dashboard/interviews/' + interview._id);
   };
 
-  const onFeedback = () => {
+  const onFeedback = (e) => {
+    if (e) e.preventDefault();
     navigate(`/dashboard/interviews/${interview._id}/feedback`);
   };
 
@@ -36,7 +38,7 @@ function InterviewItemCard({ interview }) {
       </div>
 
       <div className='flex justify-between gap-3 pt-4 border-t border-gray-100'>
-        <Button 
+        <Button type="button"
           size="sm" 
           variant="outline" 
           onClick={onFeedback}
@@ -44,7 +46,7 @@ function InterviewItemCard({ interview }) {
         >
           View Feedback
         </Button>
-        <Button 
+        <Button type="button"
           size="sm" 
           onClick={onStart}
           className='flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'

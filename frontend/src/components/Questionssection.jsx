@@ -21,9 +21,9 @@ function Questionssection({ Mockinterviewquestions, activequestionindex, setacti
       
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6'>
         {Mockinterviewquestions && Mockinterviewquestions.map((question, index) => (
-          <button
+          <button type="button"
             key={index}
-            onClick={() => setactivequestionindex && setactivequestionindex(index)}
+            onClick={(e) => { e.preventDefault(); setactivequestionindex && setactivequestionindex(index); }}
             className={`p-3 rounded-lg text-xs md:text-sm text-center cursor-pointer transition-all font-medium
       ${activequestionindex === index 
         ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105' 
@@ -40,8 +40,8 @@ function Questionssection({ Mockinterviewquestions, activequestionindex, setacti
           <h2 className='text-base md:text-lg font-medium text-gray-800 mb-3'>
             {Mockinterviewquestions[activequestionindex]?.question}
           </h2>
-          <button
-            onClick={() => textospeach(Mockinterviewquestions[activequestionindex]?.question)}
+          <button type="button"
+            onClick={(e) => { e.preventDefault(); textospeach(Mockinterviewquestions[activequestionindex]?.question); }}
             className='flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium'
           >
             <Volume2 size={18} />

@@ -147,7 +147,7 @@ function Addnewinterview() {
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={() => setOpenDialog(false)}
+                onClick={(e) => { e.preventDefault(); setOpenDialog(false); }}
                 className="min-w-[100px]"
               >
                 Cancel

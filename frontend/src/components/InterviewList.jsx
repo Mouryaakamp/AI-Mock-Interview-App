@@ -27,8 +27,9 @@ export default function InterviewList() {
         }
 
         const res = await API({
-          url: "/interviews",
           method: "GET",
+          url: "/interviews",
+          
         });
 
         setInterviews(Array.isArray(res.data) ? res.data : []);
@@ -62,8 +63,8 @@ export default function InterviewList() {
       <div className="text-center py-12 bg-amber-50 border-2 border-amber-200 rounded-lg">
         <p className="text-amber-800 font-medium mb-2">Session expired or invalid</p>
         <p className="text-amber-700 text-sm mb-4">Please log in again to view your interviews.</p>
-        <Button
-          onClick={() => navigate("/login")}
+        <Button type="button"
+          onClick={(e) => { e.preventDefault(); navigate("/login"); }}
           className="bg-amber-600 hover:bg-amber-700 text-white"
         >
           Go to Login

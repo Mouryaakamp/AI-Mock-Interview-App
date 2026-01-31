@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from 'sonner';
 import { AuthContext } from "../context/Usecontext";
-import { api } from "../utils/Api";
+import { API } from "../utils/Api";
 
 export default function Login() {
     const { setAccessToken } = useContext(AuthContext);
@@ -12,13 +12,21 @@ export default function Login() {
     const [logindata, setlogindata] = useState({ userEmail: "", userPass: "" });
 
     const handleLogin = async () => {
+        console.log("LOGIN HANDLER RUNNING");
+        alert("LOGIN HANDLER RUNNING");
+
         try {
             if (!logindata.userEmail || !logindata.userPass) {
                 toast.error("Please enter credentials");
                 return;
             }
 
-            const res = await api.post("/auth/login", logindata);
+            const res = await API({
+                method: "POST",
+                url: "/auth/login",
+                data: logindata,
+            });
+
 
             const token = res.data?.accessToken;
             if (!token) {
@@ -94,7 +102,7 @@ export default function Login() {
 
                 </div>
 
-                <Button type="button" className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={handleLogin}>
+                <Button type="button" className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={(e) => { e.preventDefault(); handleLogin(); }}>
                     Log-in
                 </Button>
 
@@ -104,10 +112,10 @@ export default function Login() {
                     <div className="flex-1 h-px bg-gray-300"></div>
                 </div>
 
-                <Button
+                <Button type="button"
                     variant="outline"
                     className="w-full h-11 flex items-center justify-center gap-2 border-2 hover:bg-gray-50"
-                    onClick={loginWithGoogle}
+                    onClick={(e) => { e.preventDefault(); loginWithGoogle(); }}
                 >
                     <img
                         src="/google-icon.svg"
@@ -118,10 +126,10 @@ export default function Login() {
                     Continue with Google
                 </Button>
 
-                <Button
+                <Button type="button"
                     variant="outline"
                     className="w-full h-11 flex items-center justify-center gap-2 border-2 hover:bg-gray-50"
-                    onClick={loginWithFacebook}
+                    onClick={(e) => { e.preventDefault(); loginWithFacebook(); }}
                 >
                     <img
                         src="/facebook-icon.svg"

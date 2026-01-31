@@ -146,8 +146,8 @@ export default function FeedbackPage() {
       </div>
 
       <div className='flex justify-center pt-6'>
-        <Button
-          onClick={() => navigate('/dashboard')}
+        <Button type="button"
+          onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}
           className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 min-w-[200px] h-12'
         >
           Back to Dashboard

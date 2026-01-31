@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import { api } from "../utils/Api";
+import { API } from "../utils/Api";
 
 function Profile() {
     const navigate = useNavigate();
@@ -8,7 +8,7 @@ function Profile() {
 
     const logout = async () => {
         try {
-            await api.post("/auth/logout");
+            await API({ method: "POST", url: "/auth/logout" });
         } catch (err) {
             console.error(err);
         }
@@ -22,8 +22,8 @@ function Profile() {
             <div className="flex-1">
                 <p className="text-sm text-gray-600">Hi, <span className="font-semibold text-gray-900">{userEmail}</span></p>
             </div>
-            <button
-                onClick={() => { logout() }}
+            <button type="button"
+                onClick={(e) => { e.preventDefault(); logout(); }}
                 className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors duration-200">
                 Log out
             </button>
