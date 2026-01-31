@@ -49,14 +49,4 @@ async function API(config) {
   }
 }
 
-export const logout = async () => {
-  try {
-    await api.post("/auth/logout");
-  } catch (err) {
-    console.error(err);
-  }
-  localStorage.removeItem("token");
-  window.location.href = "/login";
-};
-
 export { API, api };

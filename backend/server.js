@@ -14,7 +14,8 @@ const geminiRoutes = require("./routes/gemini");
 const login = require("./routes/login");
 const signup = require("./routes/signup");
 const refresh = require("./routes/refresh");
-const logout = require("./routes/logout")
+const logout = require("./routes/logout");
+const userfeedback =require("./routes/userfeedback");
 const protect = require('./middleware/auth.middleware')
 
 console.log("ENV MONGO_URI =", process.env.MONGO_URI);
@@ -51,6 +52,7 @@ app.use('/api/auth', login);
 app.use('/api/auth', signup);
 app.use('/api/auth', refresh);
 app.use('/api/auth', logout);
+app.use('/api/feedback/by-user',userfeedback)
 
 // Health check
 app.get('/api/health', (req, res) => {

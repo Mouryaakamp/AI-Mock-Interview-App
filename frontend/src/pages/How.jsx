@@ -17,7 +17,7 @@ export default function How() {
     {
       icon: Mic,
       title: "Record Answers",
-      description: "Speak your answers clearly. The system will transcribe and analyze your responses in real-time.",
+      description: "Click the start recording speak your answers clearly after your done click stop recording to save your answer",
       color: "from-pink-500 to-pink-600"
     },
     {

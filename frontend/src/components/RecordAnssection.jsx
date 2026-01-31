@@ -154,8 +154,8 @@ function RecordAnssection({ Mockinterviewquestions, activequestionindex, intervi
           disabled={loading}
           variant={isRecording ? "destructive" : "default"}
           className={`w-full h-12 text-base font-medium ${isRecording
-              ? 'bg-red-600 hover:bg-red-700 animate-pulse'
-              : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+            ? 'bg-red-600 hover:bg-red-700 animate-pulse'
+            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
             }`}
           onClick={StartStopRecording}
         >

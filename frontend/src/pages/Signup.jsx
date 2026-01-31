@@ -96,7 +96,7 @@ export default function Signup() {
                     />
                 </div>
 
-                <Button className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={handelsignup}>
+                <Button className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={handleSignup}>
                     Sign In
                 </Button>
 
