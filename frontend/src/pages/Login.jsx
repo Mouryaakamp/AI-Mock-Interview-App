@@ -12,8 +12,6 @@ export default function Login() {
     const [logindata, setlogindata] = useState({ userEmail: "", userPass: "" });
 
     const handleLogin = async () => {
-        console.log("LOGIN HANDLER RUNNING");
-        alert("LOGIN HANDLER RUNNING");
 
         try {
             if (!logindata.userEmail || !logindata.userPass) {
