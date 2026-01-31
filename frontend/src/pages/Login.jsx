@@ -94,7 +94,7 @@ export default function Login() {
 
                 </div>
 
-                <Button className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={handleLogin}>
+                <Button type="button" className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" onClick={handleLogin}>
                     Log-in
                 </Button>
 
