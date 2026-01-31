@@ -1,20 +1,20 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import {API} from "../utils/Api"
-
+import { api } from "../utils/Api";
 
 function Profile() {
-    const navigate = useNavigate()
-    const userEmail = localStorage.getItem('userEmail')
+    const navigate = useNavigate();
+    const userEmail = localStorage.getItem('userEmail');
+
     const logout = async () => {
         try {
-            await API.post("/auth/logout");
+            await api.post("/auth/logout");
         } catch (err) {
             console.error(err);
         }
         localStorage.removeItem("token");
-        localStorage.removeItem('userEmail')
-        navigate('/')
+        localStorage.removeItem('userEmail');
+        navigate('/');
     };
 
     return (

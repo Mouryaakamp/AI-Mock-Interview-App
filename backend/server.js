@@ -27,8 +27,9 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cookieParser())
+const frontendOrigin = process.env.FRONTEND_ORIGIN || "https://mock-interview-frontend-ljf2.onrender.com";
 app.use(cors({
-  origin: "https://mock-interview-frontend-ljf2.onrender.com",
+  origin: frontendOrigin,
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
 }));

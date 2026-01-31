@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from 'sonner';
 import { AuthContext } from "../context/Usecontext";
-import { API } from "../utils/Api";
+import { api } from "../utils/Api";
 
 export default function Login() {
     const { setAccessToken } = useContext(AuthContext);
@@ -18,7 +18,7 @@ export default function Login() {
                 return;
             }
 
-            const res = await API.post("/auth/login", logindata);
+            const res = await api.post("/auth/login", logindata);
 
             const token = res.data?.accessToken;
             if (!token) {

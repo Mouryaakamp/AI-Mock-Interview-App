@@ -1,7 +1,19 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_URL
+// In production (Render): use backend URL. In dev: use proxy "/api" or VITE_API_URL.
+const getBaseURL = () => {
+  const env = import.meta.env.VITE_API_URL;
+  if (env && typeof env === "string" && env.trim() !== "") {
+    return env.trim().replace(/\/$/, "") + "/api";
+  }
+  if (import.meta.env.DEV) {
+    return "/api"; // Vite proxy in dev
+  }
+  // Production fallback when VITE_API_URL not set (e.g. Render frontend)
+  return "https://mock-interviewer-backend-u6tv.onrender.com/api";
+};
 
+const baseURL = getBaseURL();
 const api = axios.create({
   baseURL,
   withCredentials: true,
