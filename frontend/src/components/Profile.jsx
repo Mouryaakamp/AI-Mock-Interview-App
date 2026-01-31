@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import {api} from "../utils/Api"
+import {API} from "../utils/Api"
 
 
 function Profile() {
@@ -8,7 +8,7 @@ function Profile() {
     const userEmail = localStorage.getItem('userEmail')
     const logout = async () => {
         try {
-            await api.post("/auth/logout");
+            await API.post("/auth/logout");
         } catch (err) {
             console.error(err);
         }
